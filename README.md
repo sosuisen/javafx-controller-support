@@ -66,6 +66,7 @@ Please reference the element using `fx:id` and set the event handler in the cont
 
 - Java and FXML files must be located within the `src` directory. For example, place Java files in `src/main/java/com/example/FooController.java` and FXML files in `src/main/resources/com/example/foo.fxml`.
 - `fx:controller` must be specified in the FXML file. `FXMLLoader.setController()` is not supported.
+- This extension will not function correctly unless there is a class in the project that extends `javafx.application.Application`.
 
 ## Extension Settings
 
