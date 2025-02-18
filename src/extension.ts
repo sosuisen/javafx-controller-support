@@ -1,9 +1,7 @@
 import * as vscode from 'vscode';
-import { generateBuilderClass } from './command/generateBuilderClass';
 import { addInitializeMethod } from './command/addInitializeMethod';
 import { addAllMissingFxIds } from './command/addAllMissingFxIds';
 import { getFxmlByControllerFilePath } from './util';
-import { BuilderClassCodeLensProvider } from './codelens/builderClassCodeLens';
 import { fxmlDictionary } from './fxmlDictionary';
 import { ControllerSupportLensProvider } from './codelens/controllerSupportCodeLens';
 import { MissingFxIdProvider } from './codeactions/missingFxId';
@@ -25,9 +23,11 @@ export async function activate(context: vscode.ExtensionContext) {
 	 * Observe changes of *.fxml files.
 	 */
 	async function checkAllFxmlFiles() {
-		const files = await vscode.workspace.findFiles("src/**/*.fxml");
+		const files = await vscode.workspace.findFiles("**/*.fxml");
 		files.forEach(uri => {
-			processFxmlFile(uri.fsPath);
+			if (uri.fsPath.includes('src' + path.sep)) {
+				processFxmlFile(uri.fsPath);
+			}
 		});
 	}
 
@@ -121,10 +121,6 @@ export async function activate(context: vscode.ExtensionContext) {
 	);
 
 	context.subscriptions.push(
-		vscode.languages.registerCodeLensProvider('java', new BuilderClassCodeLensProvider())
-	);
-
-	context.subscriptions.push(
 		vscode.commands.registerCommand('javafx-controller-support.addAllMissingFxIds', addAllMissingFxIds)
 	);
 
@@ -133,12 +129,7 @@ export async function activate(context: vscode.ExtensionContext) {
 			(document: vscode.TextDocument, classEndLine: number) => addInitializeMethod(document, classEndLine))
 	);
 
-	context.subscriptions.push(
-		vscode.commands.registerCommand('javafx-controller-support.generateBuilderClass', generateBuilderClass)
-	);
-
 	context.subscriptions.push(fxmlWatcher);
-
 }
 
 // This method is called when your extension is deactivated
