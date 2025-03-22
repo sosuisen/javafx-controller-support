@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { getFxmlByControllerFilePath, findClassDeclarationLine, calculateIndentation } from '../util';
+import { getFxmlByControllerFilePath, findClassDeclarationLine, calculateIndentation, hasFxIdField } from '../util';
 import { fxmlDictionary } from '../fxmlDictionary';
 
 export async function addAllMissingFxIds() {
@@ -39,8 +39,3 @@ export async function addAllMissingFxIds() {
         await vscode.workspace.applyEdit(edit);
     }
 }
-
-function hasFxIdField(javaText: string, fxId: string): boolean {
-    const pattern = new RegExp(`@FXML\\s+\\S+\\s+\\S+\\s+${fxId}\\s*;`);
-    return pattern.test(javaText);
-} 

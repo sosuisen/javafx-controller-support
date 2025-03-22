@@ -3,7 +3,13 @@ import { fxmlDictionary } from './fxmlDictionary';
 
 export function hasFxIdField(javaText: string, fxId: string): boolean {
     const pattern = new RegExp(`@FXML\\s+\\S+\\s+\\S+\\s+${fxId}\\s*;`);
-    return pattern.test(javaText);
+    if (pattern.test(javaText)) {
+        return true;
+    }
+    else {
+        const pattern = new RegExp(`@FXML\\s+\\S+\\s+\\S+<.+>\\s+${fxId}\\s*;`);
+        return pattern.test(javaText);
+    }
 }
 
 export function getFxmlByControllerFilePath(controllerFilePath: string): string | undefined {
@@ -82,34 +88,3 @@ export function calculateIndentation(document: vscode.TextDocument, startLine: n
     return minIndent > 0 ? unit.repeat(minIndent) : defaultIndent;
 }
 
-export async function findMainClass(uri: vscode.Uri): Promise<{ packageName: string, filePath: string } | null> {
-    const currentFileUri = vscode.Uri.parse(uri.toString());
-    const workspaceFolder = vscode.workspace.getWorkspaceFolder(currentFileUri);
-    if (!workspaceFolder) {
-        return null;
-    }
-    const pattern = new vscode.RelativePattern(workspaceFolder, 'src/**/*.java');
-    const files = await vscode.workspace.findFiles(pattern);
-
-    for (const file of files) {
-        try {
-            const document = await vscode.workspace.openTextDocument(file);
-            const content = document.getText();
-
-            const packageMatch = content.match(/package\s+([^;]+);/);
-            if (packageMatch) {
-                const packageName = packageMatch[1].trim();
-                const applicationPattern = /class\s+\w+\s+extends\s+(?:javafx\.application\.)?(Application)/;
-                if (applicationPattern.test(content)) {
-                    return { packageName, filePath: file.fsPath };
-                }
-            }
-        }
-        catch (e) {
-            console.error(`Error processing file ${file.fsPath}:`, e);
-            continue;
-        }
-    }
-
-    return null;
-}
