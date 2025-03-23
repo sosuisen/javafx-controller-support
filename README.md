@@ -68,9 +68,9 @@ Please reference the element using `fx:id` and set the event handler in the cont
 - `fx:controller` must be specified in the FXML file. `FXMLLoader.setController()` is not supported.
 - This extension will not function correctly unless there is a class in the project that extends `javafx.application.Application`.
 
-## Extension Settings
+# Restriction
 
-This extension does not contribute any settings.
+This extension does not support FXML files that are loaded using fx:include.
 
 ## Issues
 
