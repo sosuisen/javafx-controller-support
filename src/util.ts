@@ -25,7 +25,7 @@ function searchClassDeclaration(text: string, func: (i: number, startBraceCount:
 
     for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
-        const classPattern = /class\s+[A-Z]/;
+        const classPattern = /public\s+class\s+[A-Z]/;
         if (classPattern.test(line)) {
             classStartLine = i;
         }
