@@ -24,7 +24,7 @@ export function processJavaDocument(document: vscode.TextDocument) {
     while ((match = fxIdPattern.exec(javaText)) !== null) {
         const fxId = match[1];
         const fxIdExistsInFxml = fxmlData.tagAndFxIds.some(pair => pair.fxId === fxId);
-        if (!fxIdExistsInFxml) {
+        if (!fxIdExistsInFxml && fxId !== 'resources') {
             const message = `fx:id="${fxId}" does not exist in the FXML file.`;
 
             const startPos = document.positionAt(match.index);
