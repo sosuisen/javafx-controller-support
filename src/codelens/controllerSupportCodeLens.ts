@@ -46,7 +46,7 @@ export class ControllerSupportLensProvider implements vscode.CodeLensProvider {
                 if (classEndLine !== -1) {
                     const range = new vscode.Range(classEndLine, 0, classEndLine, 0);
                     const command: vscode.Command = {
-                        title: "Add public void initialize() method",
+                        title: "Add @FXML private void initialize() method",
                         command: 'javafx-controller-support.addInitializeMethod',
                         arguments: [document, classEndLine]
                     };
@@ -59,7 +59,7 @@ export class ControllerSupportLensProvider implements vscode.CodeLensProvider {
     }
 
     private hasInitializeMethod(javaText: string): boolean {
-        const initializePattern = /public\s+void\s+initialize\s*\(/;
+        const initializePattern = /void\s+initialize\s*\(/;
         return initializePattern.test(javaText);
     }
 }
